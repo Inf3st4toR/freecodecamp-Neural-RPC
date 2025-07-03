@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
+import random
 
 my_model = keras.Sequential([
     keras.layers.Flatten(input_shape=(5, 2)),
@@ -12,7 +13,7 @@ my_model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metri
 def train(data0, data1):
     X = np.array([[ [data0[i + j], data1[i + j]] for j in range(5) ] for i in range(len(data0) - 5)])
     y = np.array([data0[i + 5] for i in range(len(data0) - 5)])
-    my_model.fit(X, y, epochs=1)
+    my_model.fit(X, y, epochs=2)
 
 def predict(data):
     return np.argmax(my_model.predict(data), axis=1)[0]
@@ -22,14 +23,14 @@ def beat(guess):
         case 0:
             return "P"
         case 1:
-            return "C"
+            return "S"
         case 2:
             return "R"
 
 def player(prev_play, opponent_history=[], my_history=[]):
     # First 10 plays
     if len(my_history) < 10:
-        play = len(my_history) % 3
+        play = random.choice([0, 1, 2])
         if prev_play:
             opponent_history.append(0 if prev_play == "R" else 1 if prev_play == "P" else 2)
         my_history.append(play)
